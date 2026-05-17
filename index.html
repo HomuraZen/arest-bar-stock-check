@@ -35,25 +35,33 @@
   .chevron { font-size: 12px; color: #aaa; transition: transform 0.2s; }
   .chevron.open { transform: rotate(180deg); }
   .item-list { border-top: 1px solid #f0f0f0; }
-  .item-row { display: grid; grid-template-columns: 1fr 90px 80px 100px; gap: 8px; align-items: center; padding: 10px 20px; border-bottom: 1px solid #f7f7f7; transition: background 0.15s; }
+  .item-row { display: grid; grid-template-columns: 1fr 70px 80px 80px 100px; gap: 8px; align-items: center; padding: 10px 20px; border-bottom: 1px solid #f7f7f7; transition: background 0.15s; }
   .item-row:last-child { border-bottom: none; }
   .item-row:hover { background: #fafafa; }
   .item-row.filled { background: #f9fffe; }
   .item-row.weekly { background: #f1faf1; }
   .item-row.weekly.filled { background: #e4f7e4; }
+  .item-row.low-stock { background: #fff3f3 !important; }
   .item-row.hidden { display: none; }
-  .item-name { font-size: 13px; color: #333; display: flex; align-items: center; gap: 6px; }
+  .item-name { font-size: 13px; color: #333; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
   .weekly-dot { width: 7px; height: 7px; border-radius: 50%; background: #4CAF50; flex-shrink: 0; }
+  .low-icon { font-size: 13px; flex-shrink: 0; }
   .unit-badge { font-size: 11px; color: #888; background: #f0f0f0; border-radius: 6px; padding: 3px 8px; text-align: center; font-weight: 600; }
+  .par-badge { font-size: 11px; color: #aaa; background: #f7f7f7; border-radius: 6px; padding: 3px 8px; text-align: center; font-weight: 600; border: 1px dashed #ddd; }
+  .par-badge.breach { background: #ffe5e5; color: #c0392b; border-color: #f5c6cb; font-weight: 700; }
   .qty-input { border: 1.5px solid #e0e0e0; border-radius: 8px; padding: 7px 10px; font-size: 14px; text-align: center; outline: none; width: 100%; transition: border 0.2s; }
   .qty-input:focus { border-color: #1a1a2e; }
   .qty-input.has-value { border-color: #81C784; background: #f9fffe; }
+  .qty-input.low { border-color: #e74c3c !important; background: #fff3f3 !important; }
   .remark-input { border: 1.5px solid #e0e0e0; border-radius: 8px; padding: 7px 8px; font-size: 12px; outline: none; width: 100%; color: #555; transition: border 0.2s; }
   .remark-input:focus { border-color: #1a1a2e; }
-  .col-header { display: grid; grid-template-columns: 1fr 90px 80px 100px; gap: 8px; padding: 8px 20px; background: #f9f9f9; border-top: 1px solid #f0f0f0; }
+  .col-header { display: grid; grid-template-columns: 1fr 70px 80px 80px 100px; gap: 8px; padding: 8px 20px; background: #f9f9f9; border-top: 1px solid #f0f0f0; }
   .col-header span { font-size: 10px; font-weight: 700; color: #aaa; text-transform: uppercase; letter-spacing: 0.4px; }
-  .col-header span:nth-child(3), .col-header span:nth-child(4) { text-align: center; }
-  .weekly-legend { display: flex; align-items: center; gap: 6px; padding: 8px 24px; background: #f1faf1; border-bottom: 1px solid #e0f0e0; font-size: 12px; color: #2e7d32; font-weight: 600; }
+  .col-header span:nth-child(3), .col-header span:nth-child(4), .col-header span:nth-child(5) { text-align: center; }
+  .weekly-legend { display: flex; align-items: center; gap: 16px; padding: 8px 24px; background: #f1faf1; border-bottom: 1px solid #e0f0e0; font-size: 12px; font-weight: 600; flex-wrap: wrap; }
+  .legend-item { display: flex; align-items: center; gap: 6px; }
+  .legend-green { color: #2e7d32; }
+  .legend-red { color: #c0392b; }
   .submit-bar { position: fixed; bottom: 0; left: 0; right: 0; background: white; border-top: 1px solid #e8e8e8; padding: 14px 24px; display: flex; gap: 12px; align-items: center; box-shadow: 0 -4px 20px rgba(0,0,0,0.08); }
   .submit-btn { flex: 1; background: #1a1a2e; color: white; border: none; border-radius: 10px; padding: 14px; font-size: 15px; font-weight: 700; cursor: pointer; transition: all 0.2s; letter-spacing: 0.3px; }
   .submit-btn:hover { background: #2d2d50; }
@@ -63,8 +71,8 @@
   .toast { position: fixed; top: 80px; left: 50%; transform: translateX(-50%); background: #1a1a2e; color: white; padding: 12px 24px; border-radius: 10px; font-size: 14px; font-weight: 600; z-index: 999; opacity: 0; transition: opacity 0.3s; pointer-events: none; white-space: nowrap; }
   .toast.show { opacity: 1; }
   @media (max-width: 500px) {
-    .item-row { grid-template-columns: 1fr 70px 70px; }
-    .col-header { grid-template-columns: 1fr 70px 70px; }
+    .item-row { grid-template-columns: 1fr 60px 70px 70px; }
+    .col-header { grid-template-columns: 1fr 60px 70px 70px; }
     .remark-input { display: none; }
     .col-header span:last-child { display: none; }
     .meta-bar { flex-direction: column; }
@@ -97,8 +105,13 @@
 </div>
 
 <div class="weekly-legend">
-  <div style="width:9px;height:9px;border-radius:50%;background:#4CAF50;flex-shrink:0;"></div>
-  Green highlighted rows = Weekly check items
+  <div class="legend-item legend-green">
+    <div style="width:9px;height:9px;border-radius:50%;background:#4CAF50;flex-shrink:0;"></div>
+    Weekly items
+  </div>
+  <div class="legend-item legend-red">
+    ⚠️ Below par level
+  </div>
 </div>
 
 <div class="progress-wrap">
@@ -117,254 +130,254 @@
 <div class="toast" id="toast"></div>
 
 <script>
-// w: true = weekly, false = monthly only
+// w: weekly, par: par level (null = no par set)
 const SUPPLIERS = [
   {
     name: "Monin",
     items: [
-      { name: "French Vanilla Syrup", unit: "BTL", w: true },
-      { name: "Osmanthus Syrup", unit: "BTL", w: true },
-      { name: "Orange Syrup", unit: "BTL", w: true },
-      { name: "Pear Fruitmix", unit: "BTL", w: true },
-      { name: "Orange Fruitmix", unit: "BTL", w: true },
-      { name: "Yuzu Fruitmix", unit: "BTL", w: true },
-      { name: "Mango Fruitmix", unit: "BTL", w: true },
-      { name: "Cranberry Syrup", unit: "BTL", w: true },
-      { name: "Strawberry Syrup", unit: "BTL", w: true },
-      { name: "Peach Syrup", unit: "BTL", w: true },
-      { name: "Roasted Hazelnut Syrup", unit: "BTL", w: true },
-      { name: "Rose Syrup", unit: "BTL", w: true },
-      { name: "Pink Grapefruit Syrup", unit: "BTL", w: true },
-      { name: "Chocolate Sauce", unit: "BTL", w: true },
-      { name: "Caramel Sauce", unit: "BTL", w: false },
-      { name: "Longan Honey", unit: "BTL", w: true },
+      { name: "French Vanilla Syrup", unit: "BTL", w: true, par: 1 },
+      { name: "Osmanthus Syrup", unit: "BTL", w: true, par: 1 },
+      { name: "Orange Syrup", unit: "BTL", w: true, par: 1 },
+      { name: "Pear Fruitmix", unit: "BTL", w: true, par: 1 },
+      { name: "Orange Fruitmix", unit: "BTL", w: true, par: 1 },
+      { name: "Yuzu Fruitmix", unit: "BTL", w: true, par: 1 },
+      { name: "Mango Fruitmix", unit: "BTL", w: true, par: 3 },
+      { name: "Cranberry Syrup", unit: "BTL", w: true, par: 3 },
+      { name: "Strawberry Syrup", unit: "BTL", w: true, par: 4 },
+      { name: "Peach Syrup", unit: "BTL", w: true, par: 4 },
+      { name: "Roasted Hazelnut Syrup", unit: "BTL", w: true, par: 2 },
+      { name: "Rose Syrup", unit: "BTL", w: true, par: 2 },
+      { name: "Pink Grapefruit Syrup", unit: "BTL", w: true, par: 3 },
+      { name: "Chocolate Sauce", unit: "BTL", w: true, par: 3 },
+      { name: "Caramel Sauce", unit: "BTL", w: false, par: 3 },
+      { name: "Longan Honey", unit: "BTL", w: true, par: 5 },
     ]
   },
   {
     name: "Monin Bica",
     items: [
-      { name: "Arkadia Choc", unit: "", w: true },
-      { name: "Green Tea Leaf", unit: "", w: true },
-      { name: "Oolong Tea Leaf", unit: "", w: true },
+      { name: "Arkadia Choc", unit: "", w: true, par: 3 },
+      { name: "Green Tea Leaf", unit: "", w: true, par: 6 },
+      { name: "Oolong Tea Leaf", unit: "", w: true, par: 6 },
     ]
   },
   {
     name: "Cool Coffee",
     items: [
-      { name: "Coffee Beans (Brazil)", unit: "KG", w: true },
-      { name: "Coffee Beans (Ethiopia)", unit: "KG", w: true },
-      { name: "Coffee Beans (Seasonal Beans)", unit: "KG", w: true },
+      { name: "Coffee Beans (Brazil)", unit: "KG", w: true, par: null },
+      { name: "Coffee Beans (Ethiopia)", unit: "KG", w: true, par: null },
+      { name: "Coffee Beans (Seasonal Beans)", unit: "KG", w: true, par: null },
     ]
   },
   {
     name: "Ayc Fresh Milk",
     items: [
-      { name: "Fresh Milk", unit: "BTL", w: true },
+      { name: "Fresh Milk", unit: "BTL", w: true, par: null },
     ]
   },
   {
     name: "CGK Frozen / BGS",
     items: [
-      { name: "Oat Milk (Oatside)", unit: "PKT", w: true },
-      { name: "Whipping Cream Liquid (BGS)", unit: "PKT", w: true },
-      { name: "Tobasco Sauce", unit: "BTL", w: true },
+      { name: "Oat Milk (Oatside)", unit: "PKT", w: true, par: 15 },
+      { name: "Whipping Cream Liquid (BGS)", unit: "PKT", w: true, par: 12 },
+      { name: "Tobasco Sauce", unit: "BTL", w: true, par: 6 },
     ]
   },
   {
     name: "Niko Neko",
     items: [
-      { name: "Tsubaki Houjicha", unit: "", w: true },
-      { name: "Mokuren Genmaicha", unit: "", w: true },
-      { name: "Yuri Matcha", unit: "", w: true },
-      { name: "Ajisai Matcha", unit: "", w: true },
+      { name: "Tsubaki Houjicha", unit: "", w: true, par: 1 },
+      { name: "Mokuren Genmaicha", unit: "", w: true, par: 1 },
+      { name: "Yuri Matcha", unit: "", w: true, par: 1 },
+      { name: "Ajisai Matcha", unit: "", w: true, par: 1 },
     ]
   },
   {
     name: "H&S Tea",
     items: [
-      { name: "Dragon Pearl Jasmine", unit: "", w: true },
-      { name: "Earl Grey", unit: "", w: true },
-      { name: "Paris Black Tea", unit: "", w: true },
-      { name: "Mint Verbena", unit: "", w: true },
-      { name: "Pomegranate Oolong", unit: "", w: true },
+      { name: "Dragon Pearl Jasmine", unit: "", w: true, par: 3 },
+      { name: "Earl Grey", unit: "", w: true, par: 3 },
+      { name: "Paris Black Tea", unit: "", w: true, par: 3 },
+      { name: "Mint Verbena", unit: "", w: true, par: 3 },
+      { name: "Pomegranate Oolong", unit: "", w: true, par: 3 },
     ]
   },
   {
     name: "Pastry Pro",
     items: [
-      { name: "Strawberry Jam (Strawberry Cake)", unit: "", w: false },
+      { name: "Strawberry Jam (Strawberry Cake)", unit: "", w: false, par: null },
     ]
   },
   {
     name: "Walls Ice Cream",
     items: [
-      { name: "Magnum Ice Cream", unit: "", w: true },
-      { name: "Birthday Bash Ice Cream", unit: "", w: true },
+      { name: "Magnum Ice Cream", unit: "PCS", w: true, par: 24 },
+      { name: "Birthday Bash Ice Cream", unit: "PCS", w: true, par: 24 },
     ]
   },
   {
     name: "Utterly",
     items: [
-      { name: "Uji Matcha", unit: "PKT", w: false },
-      { name: "Kyoto Houjicha", unit: "PKT", w: false },
-      { name: "Thai Tea", unit: "PKT", w: false },
-      { name: "Oatly Oatmilk", unit: "PKT", w: false },
-      { name: "Creamy Strawberry", unit: "", w: false },
-      { name: "68% Dark Chocolate", unit: "", w: false },
-      { name: "Rose & French Vanilla", unit: "", w: false },
-      { name: "Durian D24", unit: "", w: false },
-      { name: "Osaka Organic Black Sesame", unit: "", w: false },
-      { name: "Avocado", unit: "", w: false },
+      { name: "Uji Matcha", unit: "PKT", w: false, par: null },
+      { name: "Kyoto Houjicha", unit: "PKT", w: false, par: null },
+      { name: "Thai Tea", unit: "PKT", w: false, par: null },
+      { name: "Oatly Oatmilk", unit: "PKT", w: false, par: null },
+      { name: "Creamy Strawberry", unit: "", w: false, par: null },
+      { name: "68% Dark Chocolate", unit: "", w: false, par: null },
+      { name: "Rose & French Vanilla", unit: "", w: false, par: null },
+      { name: "Durian D24", unit: "", w: false, par: null },
+      { name: "Osaka Organic Black Sesame", unit: "", w: false, par: null },
+      { name: "Avocado", unit: "", w: false, par: null },
     ]
   },
   {
     name: "Bake With Yen",
     items: [
-      { name: "Cocoa Powder", unit: "PKT", w: true },
-      { name: "Mico Chox Crisp", unit: "PKT", w: false },
-      { name: "Oreo Crumbs", unit: "PKT", w: false },
-      { name: "Chocolate Chips", unit: "PKT", w: false },
-      { name: "Icing Sugar", unit: "PKT", w: false },
-      { name: "Marshmallow", unit: "PKT", w: false },
+      { name: "Cocoa Powder", unit: "PKT", w: true, par: 1 },
+      { name: "Mico Chox Crisp", unit: "PKT", w: false, par: 1 },
+      { name: "Oreo Crumbs", unit: "PKT", w: false, par: 2 },
+      { name: "Chocolate Chips", unit: "PKT", w: false, par: 1 },
+      { name: "Icing Sugar", unit: "PKT", w: false, par: 1 },
+      { name: "Marshmallow", unit: "PKT", w: false, par: null },
     ]
   },
   {
     name: "Best Marketing",
     items: [
-      { name: "Sugar", unit: "PKT", w: true },
-      { name: "Vanilla Ice Cream", unit: "", w: true },
-      { name: "Green Tea Ice Cream", unit: "", w: true },
-      { name: "Colourful Rice", unit: "", w: false },
+      { name: "Sugar", unit: "PKT", w: true, par: 5 },
+      { name: "Vanilla Ice Cream", unit: "", w: true, par: 2 },
+      { name: "Green Tea Ice Cream", unit: "", w: true, par: 1 },
+      { name: "Colourful Rice", unit: "", w: false, par: null },
     ]
   },
   {
     name: "Secai Marche",
     items: [
-      { name: "Thyme", unit: "PKT", w: true },
-      { name: "Rosemary", unit: "PKT", w: true },
-      { name: "Lemon", unit: "KG", w: true },
-      { name: "Strawberry Fruit (M)", unit: "PKT", w: true },
-      { name: "Strawberry Fruit (S)", unit: "PKT", w: true },
-      { name: "Blueberry", unit: "PKT", w: true },
+      { name: "Thyme", unit: "PKT", w: true, par: null },
+      { name: "Rosemary", unit: "PKT", w: true, par: null },
+      { name: "Lemon", unit: "KG", w: true, par: null },
+      { name: "Strawberry Fruit (M)", unit: "PKT", w: true, par: null },
+      { name: "Strawberry Fruit (S)", unit: "PKT", w: true, par: null },
+      { name: "Blueberry", unit: "PKT", w: true, par: null },
     ]
   },
   {
     name: "De Lettuce Bear",
     items: [
-      { name: "Flower Dianthus (Edible Flower)", unit: "", w: true },
+      { name: "Flower Dianthus (Edible Flower)", unit: "", w: true, par: null },
     ]
   },
   {
     name: "Central Kitchen (BJ)",
     items: [
-      { name: "A'REST Knife", unit: "", w: false },
-      { name: "A'REST Pizza Gloves", unit: "", w: false },
-      { name: "A'REST Ice Cream Cup", unit: "", w: false },
-      { name: "A'REST Small Spoon", unit: "", w: false },
-      { name: "A'REST Pizza Box", unit: "", w: false },
-      { name: "A'REST Pizza Plastic", unit: "", w: false },
-      { name: "A'REST Wooden Fork", unit: "", w: false },
-      { name: "A'REST Wooden Spoon", unit: "", w: false },
-      { name: "A'REST Pizza Paper", unit: "", w: false },
-      { name: "A'REST Tissue", unit: "", w: false },
-      { name: "T/A Hot Cup", unit: "", w: false },
-      { name: "T/A Hot Lid", unit: "", w: false },
-      { name: "T/A Ice Cup", unit: "", w: false },
-      { name: "T/A Ice Lid", unit: "", w: false },
-      { name: "Takeaway Straw", unit: "", w: false },
-      { name: "Takeaway Frappe Straw", unit: "", w: false },
-      { name: "2oz Takeaway Sauce Pack", unit: "", w: false },
+      { name: "A'REST Knife", unit: "", w: false, par: null },
+      { name: "A'REST Pizza Gloves", unit: "", w: false, par: null },
+      { name: "A'REST Ice Cream Cup", unit: "", w: false, par: null },
+      { name: "A'REST Small Spoon", unit: "", w: false, par: null },
+      { name: "A'REST Pizza Box", unit: "", w: false, par: null },
+      { name: "A'REST Pizza Plastic", unit: "", w: false, par: null },
+      { name: "A'REST Wooden Fork", unit: "", w: false, par: null },
+      { name: "A'REST Wooden Spoon", unit: "", w: false, par: null },
+      { name: "A'REST Pizza Paper", unit: "", w: false, par: null },
+      { name: "A'REST Tissue", unit: "", w: false, par: null },
+      { name: "T/A Hot Cup", unit: "", w: false, par: null },
+      { name: "T/A Hot Lid", unit: "", w: false, par: null },
+      { name: "T/A Ice Cup", unit: "", w: false, par: null },
+      { name: "T/A Ice Lid", unit: "", w: false, par: null },
+      { name: "Takeaway Straw", unit: "", w: false, par: null },
+      { name: "Takeaway Frappe Straw", unit: "", w: false, par: null },
+      { name: "2oz Takeaway Sauce Pack", unit: "", w: false, par: null },
     ]
   },
   {
     name: "DKSH",
     items: [
-      { name: "Topping Cream", unit: "PKT", w: true },
-      { name: "Ferrero Rocher Chocolate", unit: "BOX", w: false },
-      { name: "Whipping Cream (Frappe)", unit: "PKT", w: true },
-      { name: "Chipsmore (Original)", unit: "PKT", w: false },
-      { name: "Lotus Biscuit", unit: "PKT", w: false },
-      { name: "Dark Chocolate Shave", unit: "PKT", w: false },
+      { name: "Topping Cream", unit: "PKT", w: true, par: 10 },
+      { name: "Ferrero Rocher Chocolate", unit: "PACK", w: false, par: 1 },
+      { name: "Whipping Cream (Frappe)", unit: "PKT", w: true, par: 3 },
+      { name: "Chipsmore (Original)", unit: "PKT", w: false, par: 2 },
+      { name: "Lotus Biscuit", unit: "PKT", w: false, par: 2 },
+      { name: "Dark Chocolate Shave", unit: "PKT", w: false, par: null },
     ]
   },
   {
     name: "Mcqwin",
     items: [
-      { name: "Washing Liquid", unit: "BTL", w: true },
-      { name: "Floor Cleaning Liquid", unit: "BTL", w: true },
-      { name: "Washing Powder", unit: "PKT", w: true },
+      { name: "Washing Liquid", unit: "BTL", w: true, par: 1 },
+      { name: "Floor Cleaning Liquid", unit: "BTL", w: true, par: 1 },
+      { name: "Washing Powder", unit: "PKT", w: true, par: null },
     ]
   },
   {
     name: "Unique Paper",
     items: [
-      { name: "Toilet Tissue", unit: "PKT", w: true },
-      { name: "Kitchen Towel Tissue", unit: "PKT", w: true },
-      { name: "Glass Cleaner", unit: "BTL", w: false },
-      { name: "Takeaway Fork", unit: "PKT", w: false },
-      { name: "Takeaway Spoon", unit: "PKT", w: false },
-      { name: "Takeaway Plastic Bag", unit: "PKT", w: false },
-      { name: "Takeaway Food Bowl", unit: "PKT", w: false },
-      { name: "Takeaway Food Lid", unit: "PKT", w: false },
-      { name: "Fly Spray", unit: "BTL", w: false },
-      { name: "Gloves M Size", unit: "PKT", w: true },
-      { name: "Gloves L Size", unit: "PKT", w: true },
-      { name: "Cling Wrap", unit: "ROLL", w: true },
+      { name: "Toilet Tissue", unit: "PKT", w: true, par: null },
+      { name: "Kitchen Towel Tissue", unit: "PKT", w: true, par: 6 },
+      { name: "Glass Cleaner", unit: "BTL", w: false, par: null },
+      { name: "Takeaway Fork", unit: "PKT", w: false, par: null },
+      { name: "Takeaway Spoon", unit: "PKT", w: false, par: null },
+      { name: "Takeaway Plastic Bag", unit: "PKT", w: false, par: null },
+      { name: "Takeaway Food Bowl", unit: "PKT", w: false, par: null },
+      { name: "Takeaway Food Lid", unit: "PKT", w: false, par: null },
+      { name: "Fly Spray", unit: "BTL", w: false, par: null },
+      { name: "Gloves M Size", unit: "PKT", w: true, par: 12 },
+      { name: "Gloves L Size", unit: "PKT", w: true, par: 6 },
+      { name: "Cling Wrap", unit: "ROLL", w: true, par: 2 },
     ]
   },
   {
     name: "Shopee",
     items: [
-      { name: "Brown Sugar (Sachet)", unit: "PKT", w: false },
-      { name: "Brown Sugar (1 kg)", unit: "PKT", w: false },
-      { name: "Gold Spray", unit: "", w: false },
-      { name: "Candle", unit: "", w: false },
-      { name: "Birthday Sign", unit: "", w: false },
-      { name: "Cafetto", unit: "", w: false },
-      { name: "Gloves (Black)", unit: "PKT", w: false },
-      { name: "Face Mask (Black)", unit: "PKT", w: false },
-      { name: "Hand Tissue", unit: "PKT", w: false },
-      { name: "Hand Soap", unit: "BTL", w: false },
-      { name: "M&M Chocolate Colour Beans", unit: "PKT", w: false },
-      { name: "Coffee Trash Bag", unit: "PKT", w: false },
-      { name: "Drain Clog Free", unit: "", w: false },
-      { name: "Toilet Trash Bag (Small)", unit: "PKT", w: false },
-      { name: "Toilet Sink Trash Bag (Medium)", unit: "PKT", w: false },
-      { name: "Thermal Roll (Credit Card)", unit: "ROLL", w: false },
-      { name: "Thermal Roll (POS)", unit: "ROLL", w: false },
-      { name: "Coffee Takeaway Plastic Cover", unit: "PKT", w: false },
-      { name: "Cup Takeaway Holder", unit: "PKT", w: false },
-      { name: "Lint Roller Refill", unit: "", w: false },
-      { name: "Cake Plastic Knife", unit: "", w: false },
-      { name: "Takeaway Paper Bag", unit: "PKT", w: false },
-      { name: "Dry Rose", unit: "", w: false },
+      { name: "Brown Sugar (Sachet)", unit: "PCS", w: false, par: 100 },
+      { name: "Brown Sugar (1 kg)", unit: "PACK", w: false, par: 1 },
+      { name: "Gold Spray", unit: "", w: false, par: 1 },
+      { name: "Candle", unit: "PCS", w: false, par: 15 },
+      { name: "Birthday Sign", unit: "PCS", w: false, par: 3 },
+      { name: "Cafetto", unit: "", w: false, par: null },
+      { name: "Gloves (Black)", unit: "PKT", w: false, par: 6 },
+      { name: "Face Mask (Black)", unit: "PKT", w: false, par: 6 },
+      { name: "Hand Tissue", unit: "PKT", w: false, par: null },
+      { name: "Hand Soap", unit: "BTL", w: false, par: null },
+      { name: "M&M Chocolate Colour Beans", unit: "PKT", w: false, par: null },
+      { name: "Coffee Trash Bag", unit: "PKT", w: false, par: null },
+      { name: "Drain Clog Free", unit: "", w: false, par: null },
+      { name: "Toilet Trash Bag (Small)", unit: "PKT", w: false, par: null },
+      { name: "Toilet Sink Trash Bag (Medium)", unit: "PKT", w: false, par: null },
+      { name: "Thermal Roll (Credit Card)", unit: "PACK", w: false, par: 2 },
+      { name: "Thermal Roll (POS)", unit: "PACK", w: false, par: 6 },
+      { name: "Coffee Takeaway Plastic Cover", unit: "PKT", w: false, par: null },
+      { name: "Cup Takeaway Holder", unit: "PKT", w: false, par: null },
+      { name: "Lint Roller Refill", unit: "", w: false, par: null },
+      { name: "Cake Plastic Knife", unit: "", w: false, par: null },
+      { name: "Takeaway Paper Bag", unit: "PKT", w: false, par: null },
+      { name: "Dry Rose", unit: "", w: false, par: null },
     ]
   },
   {
     name: "February Bloom Florist",
     items: [
-      { name: "Rose Petals (Birthday Bash)", unit: "", w: true },
+      { name: "Rose Petals (Birthday Bash)", unit: "", w: true, par: null },
     ]
   },
   {
     name: "Qsegar",
     items: [
-      { name: "Trash Bag (Large)", unit: "PKT", w: true },
+      { name: "Trash Bag (Large)", unit: "PKT", w: true, par: null },
     ]
   },
   {
     name: "Bidfood",
     items: [
-      { name: "Coconut Water", unit: "TIN", w: true },
+      { name: "Coconut Water", unit: "TIN", w: true, par: 12 },
     ]
   },
   {
     name: "Others",
     items: [
-      { name: "Croffles Batu Pahat", unit: "", w: false },
-      { name: "Gas Torch", unit: "", w: true },
-      { name: "Soda Water", unit: "BTL", w: true },
-      { name: "Tonic Water", unit: "BTL", w: true },
+      { name: "Croffles Batu Pahat", unit: "PACK", w: false, par: 2 },
+      { name: "Gas Torch", unit: "", w: true, par: null },
+      { name: "Soda Water", unit: "BTL", w: true, par: 4 },
+      { name: "Tonic Water", unit: "BTL", w: true, par: 4 },
     ]
   },
 ];
@@ -408,7 +421,7 @@ function init() {
     const colHdr = document.createElement('div');
     colHdr.className = 'col-header';
     colHdr.id = `colhdr-${si}`;
-    colHdr.innerHTML = `<span>Item</span><span>Unit</span><span>Qty</span><span>Remarks</span>`;
+    colHdr.innerHTML = `<span>Item</span><span>Unit</span><span>Par</span><span>Qty</span><span>Remarks</span>`;
     block.appendChild(colHdr);
 
     const list = document.createElement('div');
@@ -421,11 +434,13 @@ function init() {
       const row = document.createElement('div');
       row.className = 'item-row' + (item.w ? ' weekly' : '');
       row.id = `row-${key}`;
+      const parDisplay = item.par !== null ? item.par : '—';
       row.innerHTML = `
         <span class="item-name">${item.w ? '<span class="weekly-dot"></span>' : ''} ${item.name}</span>
         <span class="unit-badge">${item.unit || '—'}</span>
+        <span class="par-badge" id="par-${key}">${parDisplay}</span>
         <input class="qty-input" type="number" min="0" step="0.01" placeholder="0"
-               oninput="updateQty('${key}', this.value)" id="qty-${key}">
+               oninput="updateQty('${key}', this.value, ${item.par})" id="qty-${key}">
         <input class="remark-input" type="text" placeholder="Remark..."
                oninput="updateRemark('${key}', this.value)" id="rem-${key}">`;
       list.appendChild(row);
@@ -462,12 +477,32 @@ function toggleSupplier(si) {
   document.getElementById(`chev-${si}`).classList.toggle('open', !collapsed[si]);
 }
 
-function updateQty(key, val) {
+function updateQty(key, val, par) {
   formData[key].qty = val;
   const input = document.getElementById(`qty-${key}`);
   const row = document.getElementById(`row-${key}`);
-  input.classList.toggle('has-value', val !== '');
-  row.classList.toggle('filled', val !== '');
+  const parBadge = document.getElementById(`par-${key}`);
+  const isLow = par !== null && val !== '' && Number(val) <= par;
+
+  input.classList.toggle('has-value', val !== '' && !isLow);
+  input.classList.toggle('low', isLow);
+  row.classList.toggle('filled', val !== '' && !isLow);
+  row.classList.toggle('low-stock', isLow);
+
+  if (parBadge) parBadge.classList.toggle('breach', isLow);
+
+  // Add/remove warning icon in item name
+  const nameEl = row.querySelector('.item-name');
+  const existingIcon = nameEl.querySelector('.low-icon');
+  if (isLow && !existingIcon) {
+    const icon = document.createElement('span');
+    icon.className = 'low-icon';
+    icon.textContent = '⚠️';
+    nameEl.appendChild(icon);
+  } else if (!isLow && existingIcon) {
+    existingIcon.remove();
+  }
+
   updateProgress();
 }
 
@@ -520,12 +555,17 @@ async function submitForm() {
     sup.items.forEach((item, ii) => {
       if (currentCheckType === 'Weekly' && !item.w) return;
       const k = `${si}-${ii}`;
+      const qty = formData[k].qty === '' ? '' : Number(formData[k].qty);
+      const isLow = item.par !== null && qty !== '' && qty <= item.par;
       rows.push({
         supplier: sup.name,
         item: item.name,
         unit: item.unit || '',
+        par: item.par !== null ? item.par : '',
         qty: formData[k].qty,
         remark: formData[k].remark,
+        belowPar: isLow ? 'YES' : '',
+        unitPrice: '',
         cog: ''
       });
     });
@@ -533,20 +573,7 @@ async function submitForm() {
 
   const payload = { staffName, checkType, checkDate, rows, submittedAt: new Date().toISOString() };
 
-  // --- REPLACE THIS WITH YOUR GOOGLE APPS SCRIPT WEB APP URL ---
-  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxoFOkN5UlpqDaZNPmky97hhgJGAyzhz-Bq1hbOZ4f0SKkHAiAk81Efyt9XlExDV6Y/exec';
-
-  if (SCRIPT_URL === 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE') {
-    console.log('Payload:', JSON.stringify(payload, null, 2));
-    setTimeout(() => {
-      btn.disabled = false;
-      btn.classList.add('success');
-      btn.textContent = '✓ Submitted (Demo Mode)';
-      showToast('✅ Demo mode — connect Google Sheets to go live!', 4000);
-      setTimeout(() => { btn.classList.remove('success'); btn.textContent = 'Submit Stock Check'; }, 4000);
-    }, 800);
-    return;
-  }
+  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwEc_xKWEEg8-bS3dXfQw9eF8qCgEUInvrDnG_YvqlW1gRa4QkzBC95ZwVxk9clT8Phuw/exec';
 
   try {
     const form = new FormData();
